@@ -181,7 +181,7 @@
   </style>
 </head>
 <body>
-  <audio id="sigla-audio" loop preload="auto"></audio>
+  <audio id="sigla-audio" src="sigla.mp3" autoplay loop preload="auto"></audio>
 
   <header>
     <span class="badge">UAN PIS SPECIAL EDITION</span>
@@ -204,8 +204,6 @@
     const CONFIG = {
       // Metti il percorso o URL della foto (es. "./amico.jpg") oppure lascia null per il placeholder
       immagineUrl: "foto.png",
-      // Metti il file MP3 nella stessa cartella (es. "./sigla-one-piece.mp3")
-      audioSrc: "sigla.mp3",
       // Frasi che scorrono davanti all'immagine ogni tanto
       frasiScorrevoli: [
         "UANPIS UANPIS UNAPIS",
@@ -224,8 +222,6 @@
     const stage = document.getElementById("stage");
     const fotoEl = document.getElementById("foto-amico");
     const placeholderEl = document.getElementById("placeholder");
-
-    audioEl.src = CONFIG.audioSrc;
 
     if (CONFIG.immagineUrl) {
       fotoEl.src = CONFIG.immagineUrl;
