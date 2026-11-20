@@ -250,13 +250,15 @@
     }
 
     window.addEventListener("DOMContentLoaded", async () => {
+      console.log("Window loaded");
       audioBtn.style.display = "none";
 
       try {
         await audioEl.play();
         audioBtn.textContent = "Pausa sigla";
-      } catch {
+      } catch(e) {
         audioBtn.textContent = "Riavvia sigla";
+        console.error(e);
       }
 
       mostraFraseScorrevole();
