@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laurea in Modalità Pirata - One Piece</title>
+  <title>Auguri Mchel Di Mu</title>
   <style>
     * {
       box-sizing: border-box;
@@ -184,13 +184,13 @@
   <audio id="sigla-audio" loop preload="auto"></audio>
 
   <header>
-    <span class="badge">ONE PIECE SPECIAL EDITION</span>
+    <span class="badge">UAN PIS SPECIAL EDITION</span>
     <button type="button" id="audio-btn" class="audio-btn">Pausa sigla</button>
   </header>
 
   <main>
     <div class="stage" id="stage">
-      <img id="foto-amico" alt="Festeggiato in modalità Re dei Pirati" />
+      <img id="foto-amico" alt="Dottore Una Pis" />
       <div class="placeholder" id="placeholder">
         <p class="placeholder-title">IMMAGINE CENTRALE GRANDE</p>
         <p class="placeholder-text">
@@ -203,9 +203,9 @@
   <script>
     const CONFIG = {
       // Metti il percorso o URL della foto (es. "./amico.jpg") oppure lascia null per il placeholder
-      immagineUrl: "./foto.png",
+      immagineUrl: "foto.png",
       // Metti il file MP3 nella stessa cartella (es. "./sigla-one-piece.mp3")
-      audioSrc: "./sigla.mp3",
+      audioSrc: "sigla.mp3",
       // Frasi che scorrono davanti all'immagine ogni tanto
       frasiScorrevoli: [
         "UANPIS UANPIS UNAPIS",
@@ -249,8 +249,8 @@
       indiceFrase = (indiceFrase + 1) % CONFIG.frasiScorrevoli.length;
     }
 
-    window.addEventListener("load", async () => {
-      audioBtn.style.display = "inline-block";
+    window.addEventListener("DOMContentLoaded", async () => {
+      audioBtn.style.display = "none";
 
       try {
         await audioEl.play();
