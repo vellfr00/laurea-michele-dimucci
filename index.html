@@ -182,6 +182,7 @@
 </head>
 <body>
   <audio id="sigla-audio" src="sigla.mp3" autoplay loop preload="auto"></audio>
+  <canvas id="fuochi-canvas"></canvas>
 
   <header>
     <span class="badge">UAN PIS SPECIAL EDITION</span>
@@ -200,16 +201,28 @@
     </div>
   </main>
 
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h1 class="modal-title">AUGURI</h1>
+      <p class="modal-text">
+        Clicca per aprire la pagina.
+      </p>
+      <button type="button" id="start-btn" class="start-btn">
+        UNAPIS UNAPIS UANPIS
+      </button>
+    </div>
+  </div>
+
   <script>
     const CONFIG = {
       // Metti il percorso o URL della foto (es. "./amico.jpg") oppure lascia null per il placeholder
       immagineUrl: "foto.png",
       // Frasi che scorrono davanti all'immagine ogni tanto
       frasiScorrevoli: [
-        "UANPIS UANPIS UNAPIS",
+        "UANPIS UANPIS UANPIS",
         "DOTTORE!",
         "AUGURI MCHEL DI MU!",
-        "UANPISUANPISUNAPISUANPISUANPISUNAPIS",
+        "UANPISUANPISUANPISUANPISUANPIS",
         "TECNICO DI LABORATORIO"
       ],
       // Intervallo in millisecondi tra una scritta e la successiva
@@ -218,6 +231,7 @@
 
     const audioEl = document.getElementById("sigla-audio");
     const audioBtn = document.getElementById("audio-btn");
+    const overlay = document.getElementById("overlay");
     const startBtn = document.getElementById("start-btn");
     const stage = document.getElementById("stage");
     const fotoEl = document.getElementById("foto-amico");
@@ -245,22 +259,6 @@
       indiceFrase = (indiceFrase + 1) % CONFIG.frasiScorrevoli.length;
     }
 
-    window.addEventListener("DOMContentLoaded", async () => {
-      console.log("Window loaded");
-      audioBtn.style.display = "none";
-
-      try {
-        await audioEl.play();
-        audioBtn.textContent = "Pausa sigla";
-      } catch(e) {
-        audioBtn.textContent = "Riavvia sigla";
-        console.error(e);
-      }
-
-      mostraFraseScorrevole();
-      setInterval(mostraFraseScorrevole, CONFIG.intervalloFrasiMs);
-    });
-
     audioBtn.addEventListener("click", async () => {
       if (audioEl.paused) {
         try {
@@ -273,6 +271,71 @@
         audioEl.pause();
         audioBtn.textContent = "Riavvia sigla";
       }
+    });
+
+    // Fuochi d'artificio
+    const fwCanvas = document.getElementById("fuochi-canvas");
+    const fwCtx = fwCanvas.getContext("2d");
+    let particelle = [];
+    const colori = ["#fbbf24", "#ef4444", "#38bdf8", "#a855f7", "#4ade80"];
+
+    function ridimensionaCanvas() {
+      fwCanvas.width = window.innerWidth;
+      fwCanvas.height = window.innerHeight;
+    }
+    ridimensionaCanvas();
+    window.addEventListener("resize", ridimensionaCanvas);
+
+    function sparaRazzo() {
+      const x = Math.random() * fwCanvas.width * 0.8 + fwCanvas.width * 0.1;
+      const y = Math.random() * fwCanvas.height * 0.45 + fwCanvas.height * 0.1;
+      const colore = colori[Math.floor(Math.random() * colori.length)];
+      for (let i = 0; i < 36; i++) {
+        const angolo = (Math.PI * 2 * i) / 36;
+        const velocita = Math.random() * 4 + 1.5;
+        particelle.push({
+          x,
+          y,
+          vx: Math.cos(angolo) * velocita,
+          vy: Math.sin(angolo) * velocita,
+          alpha: 1,
+          colore
+        });
+      }
+    }
+
+    function animaFuochi() {
+      fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+      particelle = particelle.filter((p) => p.alpha > 0.02);
+      for (const p of particelle) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.06;
+        p.alpha -= 0.018;
+        fwCtx.globalAlpha = Math.max(0, p.alpha);
+        fwCtx.fillStyle = p.colore;
+        fwCtx.beginPath();
+        fwCtx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        fwCtx.fill();
+      }
+      fwCtx.globalAlpha = 1;
+      requestAnimationFrame(animaFuochi);
+    }    
+
+    startBtn.addEventListener("click", async () => {
+      overlay.style.display = "none";
+      audioBtn.style.display = "none";
+
+      try {
+        await audioEl.play();
+      } catch(e) {
+        console.error(e);
+      }
+
+      mostraFraseScorrevole();
+      setInterval(mostraFraseScorrevole, CONFIG.intervalloFrasiMs);
+      setInterval(sparaRazzo, 1100);
+      animaFuochi();
     });
   </script>
 </body>
