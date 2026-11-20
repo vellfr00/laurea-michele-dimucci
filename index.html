@@ -200,18 +200,6 @@
     </div>
   </main>
 
-  <div class="overlay" id="overlay">
-    <div class="modal">
-      <h1 class="modal-title">LAUREA IN MODALITÀ PIRATA</h1>
-      <p class="modal-text">
-        Clicca per aprire la pagina e far partire la sigla in sottofondo.
-      </p>
-      <button type="button" id="start-btn" class="start-btn">
-        SALPA E AVVIA LA SIGLA
-      </button>
-    </div>
-  </div>
-
   <script>
     const CONFIG = {
       // Metti il percorso o URL della foto (es. "./amico.jpg") oppure lascia null per il placeholder
@@ -233,7 +221,6 @@
     const audioEl = document.getElementById("sigla-audio");
     const audioBtn = document.getElementById("audio-btn");
     const startBtn = document.getElementById("start-btn");
-    const overlay = document.getElementById("overlay");
     const stage = document.getElementById("stage");
     const fotoEl = document.getElementById("foto-amico");
     const placeholderEl = document.getElementById("placeholder");
@@ -262,8 +249,7 @@
       indiceFrase = (indiceFrase + 1) % CONFIG.frasiScorrevoli.length;
     }
 
-    startBtn.addEventListener("click", async () => {
-      overlay.style.display = "none";
+    window.addEventListener("load", async () => {
       audioBtn.style.display = "inline-block";
 
       try {
