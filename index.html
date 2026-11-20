@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dottore... quasi per caso!</title>
+  <style>
+    :root {
+      --bg: #fffdf5;
+      --card: #ffffff;
+      --ink: #18181b;
+      --accent: #e11d48;
+      --accent-2: #2563eb;
+      --border: #18181b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: var(--card);
+      border: 3px solid var(--border);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 8px 8px 0 var(--border);
+    }
+    .badge {
+      display: inline-block;
+      background: #fef08a;
+      border: 2px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      line-height: 1.1;
+    }
+    p {
+      margin: 0 0 18px;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+    .box {
+      background: #f4f4f5;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+    .label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+      color: #52525b;
+      margin-bottom: 6px;
+    }
+    #frase {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    button {
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      box-shadow: 3px 3px 0 var(--border);
+      transition: transform 0.08s ease;
+    }
+    button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--border);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+    }
+    .btn-secondary {
+      background: var(--accent-2);
+      color: #ffffff;
+    }
+    .btn-ghost {
+      background: #ffffff;
+      color: var(--ink);
+    }
+    .stats {
+      font-size: 0.95rem;
+      color: #3f3f46;
+    }
+    .toast {
+      min-height: 22px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #15803d;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <span class="badge">ALLERTA DOTTORE IN ARRIVO</span>
+    <h1>Ce l'hai fatta davvero, <span id="nome-amico">Amico</span>!</h1>
+    <p>
+      Hai sopravvissuto a sessioni d'esame, scadenze impossibili e caffè a livelli illegali.
+      Ora il titolo c'è: resta solo da capire chi paga il primo giro.
+    </p>
+
+    <div class="box">
+      <div class="label">Verdetto ufficiale della commissione</div>
+      <p id="frase">Premi il pulsante per generare una perla di saggezza accademica.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="btn-frase" type="button">Nuova frase</button>
+      <button class="btn-secondary" id="btn-applauso" type="button">Festeggia (+1 brindisi)</button>
+      <button class="btn-ghost" id="btn-copia" type="button">Copia messaggio</button>
+    </div>
+
+    <div class="stats">
+      Brindisi virtuali accumulati: <strong id="contatore">0</strong>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </main>
+
+  <script>
+    // Personalizza qui il nome del festeggiato
+    const NOME_AMICO = "NomeAmico";
+    document.getElementById("nome-amico").textContent = NOME_AMICO;
+
+    const FRASI = [
+      "Da oggi puoi farti chiamare Dottore anche dal fattorino della pizza.",
+      "La tesi è finita: ora puoi finalmente ricominciare a dormire.",
+      "Hai dimostrato grande resistenza. Soprattutto alle notti prima degli esami.",
+      "Traguardo sbloccato: prossimo livello, trovare dove hai messo le chiavi.",
+      "Il pezzo di carta c'è, ma il vero esame inizia quando ti chiedono cosa sai fare."
+    ];
+
+    let brindisi = 0;
+    const fraseEl = document.getElementById("frase");
+    const contatoreEl = document.getElementById("contatore");
+    const toastEl = document.getElementById("toast");
+
+    function mostraToast(msg) {
+      toastEl.textContent = msg;
+      setTimeout(() => {
+        if (toastEl.textContent === msg) toastEl.textContent = "";
+      }, 2500);
+    }
+
+    document.getElementById("btn-frase").addEventListener("click", () => {
+      const idx = Math.floor(Math.random() * FRASI.length);
+      fraseEl.textContent = FRASI[idx];
+      mostraToast("Nuova frase generata.");
+    });
+
+    document.getElementById("btn-applauso").addEventListener("click", () => {
+      brindisi += 1;
+      contatoreEl.textContent = String(brindisi);
+      mostraToast("Cin cin! Brindisi registrato.");
+    });
+
+    document.getElementById("btn-copia").addEventListener("click", async () => {
+      const testo = `NOMEAMICOèoraDottore!"{fraseEl.textContent}"`;
+      try {
+        await navigator.clipboard.writeText(testo);
+        mostraToast("Messaggio copiato negli appunti.");
+      } catch {
+        mostraToast("Impossibile copiare automaticamente su questo browser.");
+      }
+    });
+  </script>
+</body>
+</html>
