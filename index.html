@@ -3,190 +3,291 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dottore... quasi per caso!</title>
+  <title>Laurea in Modalità Pirata - One Piece</title>
   <style>
-    :root {
-      --bg: #fffdf5;
-      --card: #ffffff;
-      --ink: #18181b;
-      --accent: #e11d48;
-      --accent-2: #2563eb;
-      --border: #18181b;
+    * {
+      box-sizing: border-box;
     }
-    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
       min-height: 100vh;
-      display: grid;
-      place-items: center;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top, #1d4ed8 0%, #0f172a 65%, #020617 100%);
+      color: #ffffff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      z-index: 10;
+    }
+
+    .badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      background: #ef4444;
+      color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+
+    .audio-btn {
+      display: none;
+      background: #f59e0b;
+      color: #111827;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px 28px;
+      position: relative;
+    }
+
+    .stage {
+      position: relative;
+      width: min(92vw, 960px);
+      height: min(74vh, 680px);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 4px solid #f59e0b;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stage img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .placeholder {
+      text-align: center;
       padding: 24px;
     }
-    .card {
-      width: 100%;
-      max-width: 640px;
-      background: var(--card);
-      border: 3px solid var(--border);
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: 8px 8px 0 var(--border);
+
+    .placeholder-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin: 0 0 8px;
+      color: #fbbf24;
     }
-    .badge {
-      display: inline-block;
-      background: #fef08a;
-      border: 2px solid var(--border);
-      border-radius: 999px;
-      padding: 4px 12px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      line-height: 1.1;
-    }
-    p {
-      margin: 0 0 18px;
-      font-size: 1.05rem;
-      line-height: 1.5;
-    }
-    .box {
-      background: #f4f4f5;
-      border: 2px dashed var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 18px;
-    }
-    .label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 700;
-      color: #52525b;
-      margin-bottom: 6px;
-    }
-    #frase {
-      font-size: 1.15rem;
-      font-weight: 600;
+
+    .placeholder-text {
+      color: #cbd5e1;
       margin: 0;
     }
-    .actions {
+
+    @keyframes scorriDavanti {
+      0% {
+        transform: translate3d(105vw, -50%, 0) rotate(-2deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translate3d(-120%, -50%, 0) rotate(-2deg);
+        opacity: 0;
+      }
+    }
+
+    .frase-scorrimento {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      white-space: nowrap;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 3.6vw, 2.8rem);
+      letter-spacing: 0.04em;
+      color: #fff3b0;
+      background: rgba(15, 23, 42, 0.86);
+      border: 3px solid #f59e0b;
+      border-radius: 12px;
+      padding: 10px 22px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.85);
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 18px;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 20;
     }
-    button {
+
+    .modal {
+      max-width: 440px;
+      width: 100%;
+      background: #0f172a;
+      border: 2px solid #f59e0b;
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-title {
+      margin: 0 0 10px;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #fbbf24;
+    }
+
+    .modal-text {
+      margin: 0 0 20px;
+      color: #e2e8f0;
+      line-height: 1.5;
+    }
+
+    .start-btn {
+      background: #ef4444;
+      color: #ffffff;
+      border: 2px solid #fbbf24;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 900;
       cursor: pointer;
-      font: inherit;
-      font-weight: 700;
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 16px;
-      box-shadow: 3px 3px 0 var(--border);
-      transition: transform 0.08s ease;
-    }
-    button:active {
-      transform: translate(2px, 2px);
-      box-shadow: 1px 1px 0 var(--border);
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: #ffffff;
-    }
-    .btn-secondary {
-      background: var(--accent-2);
-      color: #ffffff;
-    }
-    .btn-ghost {
-      background: #ffffff;
-      color: var(--ink);
-    }
-    .stats {
-      font-size: 0.95rem;
-      color: #3f3f46;
-    }
-    .toast {
-      min-height: 22px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #15803d;
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <span class="badge">ALLERTA DOTTORE IN ARRIVO</span>
-    <h1>Ce l'hai fatta davvero, <span id="nome-amico">Amico</span>!</h1>
-    <p>
-      Hai sopravvissuto a sessioni d'esame, scadenze impossibili e caffè a livelli illegali.
-      Ora il titolo c'è: resta solo da capire chi paga il primo giro.
-    </p>
+  <audio id="sigla-audio" loop preload="auto"></audio>
 
-    <div class="box">
-      <div class="label">Verdetto ufficiale della commissione</div>
-      <p id="frase">Premi il pulsante per generare una perla di saggezza accademica.</p>
-    </div>
+  <header>
+    <span class="badge">ONE PIECE SPECIAL EDITION</span>
+    <button type="button" id="audio-btn" class="audio-btn">Pausa sigla</button>
+  </header>
 
-    <div class="actions">
-      <button class="btn-primary" id="btn-frase" type="button">Nuova frase</button>
-      <button class="btn-secondary" id="btn-applauso" type="button">Festeggia (+1 brindisi)</button>
-      <button class="btn-ghost" id="btn-copia" type="button">Copia messaggio</button>
+  <main>
+    <div class="stage" id="stage">
+      <img id="foto-amico" alt="Festeggiato in modalità Re dei Pirati" />
+      <div class="placeholder" id="placeholder">
+        <p class="placeholder-title">IMMAGINE CENTRALE GRANDE</p>
+        <p class="placeholder-text">
+          Imposta <code>immagineUrl</code> in <code>CONFIG</code> dentro questo file HTML con la foto del tuo amico
+        </p>
+      </div>
     </div>
-
-    <div class="stats">
-      Brindisi virtuali accumulati: <strong id="contatore">0</strong>
-    </div>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </main>
 
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h1 class="modal-title">LAUREA IN MODALITÀ PIRATA</h1>
+      <p class="modal-text">
+        Clicca per aprire la pagina e far partire la sigla in sottofondo.
+      </p>
+      <button type="button" id="start-btn" class="start-btn">
+        SALPA E AVVIA LA SIGLA
+      </button>
+    </div>
+  </div>
+
   <script>
-    // Personalizza qui il nome del festeggiato
-    const NOME_AMICO = "NomeAmico";
-    document.getElementById("nome-amico").textContent = NOME_AMICO;
+    const CONFIG = {
+      // Metti il percorso o URL della foto (es. "./amico.jpg") oppure lascia null per il placeholder
+      immagineUrl: null,
+      // Metti il file MP3 nella stessa cartella (es. "./sigla-one-piece.mp3")
+      audioSrc: "./sigla-one-piece.mp3",
+      // Frasi che scorrono davanti all'immagine ogni tanto
+      frasiScorrevoli: [
+        "UANPIS UANPIS UNAPIS",
+        "DOTTORE!",
+        "AUGURI MCHEL DI MU!",
+        "UANPISUANPISUNAPISUANPISUANPISUNAPIS",
+        "TECNICO DI LABORATORIO"
+      ],
+      // Intervallo in millisecondi tra una scritta e la successiva
+      intervalloFrasiMs: 3600
+    };
 
-    const FRASI = [
-      "Da oggi puoi farti chiamare Dottore anche dal fattorino della pizza.",
-      "La tesi è finita: ora puoi finalmente ricominciare a dormire.",
-      "Hai dimostrato grande resistenza. Soprattutto alle notti prima degli esami.",
-      "Traguardo sbloccato: prossimo livello, trovare dove hai messo le chiavi.",
-      "Il pezzo di carta c'è, ma il vero esame inizia quando ti chiedono cosa sai fare."
-    ];
+    const audioEl = document.getElementById("sigla-audio");
+    const audioBtn = document.getElementById("audio-btn");
+    const startBtn = document.getElementById("start-btn");
+    const overlay = document.getElementById("overlay");
+    const stage = document.getElementById("stage");
+    const fotoEl = document.getElementById("foto-amico");
+    const placeholderEl = document.getElementById("placeholder");
 
-    let brindisi = 0;
-    const fraseEl = document.getElementById("frase");
-    const contatoreEl = document.getElementById("contatore");
-    const toastEl = document.getElementById("toast");
+    audioEl.src = CONFIG.audioSrc;
 
-    function mostraToast(msg) {
-      toastEl.textContent = msg;
-      setTimeout(() => {
-        if (toastEl.textContent === msg) toastEl.textContent = "";
-      }, 2500);
+    if (CONFIG.immagineUrl) {
+      fotoEl.src = CONFIG.immagineUrl;
+      fotoEl.style.display = "block";
+      placeholderEl.style.display = "none";
     }
 
-    document.getElementById("btn-frase").addEventListener("click", () => {
-      const idx = Math.floor(Math.random() * FRASI.length);
-      fraseEl.textContent = FRASI[idx];
-      mostraToast("Nuova frase generata.");
-    });
+    let indiceFrase = 0;
 
-    document.getElementById("btn-applauso").addEventListener("click", () => {
-      brindisi += 1;
-      contatoreEl.textContent = String(brindisi);
-      mostraToast("Cin cin! Brindisi registrato.");
-    });
+    function mostraFraseScorrevole() {
+      const vecchiaFrase = stage.querySelector(".frase-scorrimento");
+      if (vecchiaFrase) vecchiaFrase.remove();
 
-    document.getElementById("btn-copia").addEventListener("click", async () => {
-      const testo = `NOMEAMICOèoraDottore!"{fraseEl.textContent}"`;
+      const el = document.createElement("div");
+      el.className = "frase-scorrimento";
+      el.textContent = CONFIG.frasiScorrevoli[indiceFrase];
+      const durataSec = Math.max(2.6, CONFIG.intervalloFrasiMs / 1000);
+      el.style.animation = `scorriDavanti ${durataSec}s linear forwards`;
+
+      stage.appendChild(el);
+      indiceFrase = (indiceFrase + 1) % CONFIG.frasiScorrevoli.length;
+    }
+
+    startBtn.addEventListener("click", async () => {
+      overlay.style.display = "none";
+      audioBtn.style.display = "inline-block";
+
       try {
-        await navigator.clipboard.writeText(testo);
-        mostraToast("Messaggio copiato negli appunti.");
+        await audioEl.play();
+        audioBtn.textContent = "Pausa sigla";
       } catch {
-        mostraToast("Impossibile copiare automaticamente su questo browser.");
+        audioBtn.textContent = "Riavvia sigla";
+      }
+
+      mostraFraseScorrevole();
+      setInterval(mostraFraseScorrevole, CONFIG.intervalloFrasiMs);
+    });
+
+    audioBtn.addEventListener("click", async () => {
+      if (audioEl.paused) {
+        try {
+          await audioEl.play();
+          audioBtn.textContent = "Pausa sigla";
+        } catch {
+          audioBtn.textContent = "Riavvia sigla";
+        }
+      } else {
+        audioEl.pause();
+        audioBtn.textContent = "Riavvia sigla";
       }
     });
   </script>
